@@ -110,11 +110,10 @@ window.onload = function() {
     gBackgroundImg.onerror = function() {
       gBackgroundImg = null;
     };
+    gBackgroundImg.onload = function() {
+      render();
+    };
     gBackgroundImg.src = input.value;
-    render();
-    
-    input.value = '';
-    
   }, false);
 };
 
@@ -206,7 +205,10 @@ function render() {
   gBackCtx.clearRect(0, 0, WIDTH, HEIGHT);
   gCtx.clearRect(0, 0, WIDTH, HEIGHT);
   if (gBackgroundImg) {
-    gBackCtx.drawImage(gBackgroundImg, 0, 0);
+    var scale = document.getElementById('imageScale').value;
+    gBackCtx.drawImage(gBackgroundImg,
+      0, 0, gBackgroundImg.width, gBackgroundImg.height,
+      0, 0, scale * gBackgroundImg.width, scale * gBackgroundImg.height);
   }
   if (gBezierPath) {
     gBezierPath.draw(gBackCtx);
