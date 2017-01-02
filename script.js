@@ -622,16 +622,33 @@ function drawPath(path) {
     pt = new Point(pos[len-2], pos[len-1]);
     if (tail && len > 2) {
       var angle1, angle2, len1, len2;
+      var ctrlPt1x = pos[len-6];
+      var ctrlPt1y = pos[len-5];
+      var ctrlPt2x = pos[len-4];
+      var ctrlPt2y = pos[len-3];
 
-      angle1 = Math.atan((pos[len-5] - tail.pt.y())/(tail.pt.x() - pos[len-6]));
-      angle2 = Math.atan((pos[len-3] - pt.y())/(pt.x() - pos[len-4])) + Math.PI;
-      if (tail.pt.x() > pt.x()) {
+      console.log('ctrlPt1:', ctrlPt1x, ctrlPt1y);
+      console.log('ctrlPt2:', ctrlPt2x, ctrlPt2y);
+
+      angle1 = - Math.atan((tail.pt.y() - ctrlPt1y)/(tail.pt.x() - ctrlPt1x));
+      angle2 = Math.atan((pt.y() - ctrlPt2y)/(pt.x() - ctrlPt2x));
+      if (tail.pt.y() > ctrlPt1y) {
         angle1 *= -1;
+      }
+      if (pt.y() > ctrlPt2y) {
         angle2 *= -1;
       }
+      // if (tail.pt.y() > ctrlPt1x) {
+      //   angle1 += Math.PI;
+      // }
+      // if (pt.x() > ctrlPt2x) {
+        // angle2 += Math.PI
+      // }
+      console.log('angle1:', angle1, angle1 / Math.PI);
+      console.log('angle2:', angle2, angle2 / Math.PI);
 
-      len1 = Math.sqrt(Math.pow(tail.pt.y() - pos[len-5], 2) + Math.pow(tail.pt.x() - pos[len-6], 2));
-      len2 = Math.sqrt(Math.pow(pt.y() - pos[len-3], 2) + Math.pow(pt.x() - pos[len-4], 2));
+      len1 = Math.sqrt(Math.pow(tail.pt.y() - ctrlPt1y, 2) + Math.pow(tail.pt.x() - ctrlPt1x, 2));
+      len2 = Math.sqrt(Math.pow(pt.y() - ctrlPt2y, 2) + Math.pow(pt.x() - ctrlPt2x, 2));
 
       ctrl1 = {angle: angle1, len: len1};
       ctrl2 = {angle: angle2, len: len2};
