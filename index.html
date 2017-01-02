@@ -3,58 +3,69 @@
 <head>
 	<meta charset="utf-8" />
 	<title>HTML5 Canvas bezierCurveTo generator</title>
-  <meta name="description"
-  content="A tool to live-generate bezierCurveTo commands on canvas, by drawing on a canvas" />
-  <meta name="keywords"
-  content="html5, html, javascript, canvas, bezierCurveTo, bezier, tool, path, draw, drawing, generator, creator, auto-generate, generate, canvas2d" />
-	<link rel="stylesheet" type="text/css" href="style.css" />
+  <meta name="description" content="A tool to live-generate SVG and bezierCurveTo commands on canvas, by drawing on a canvas" />
+  <meta name="keywords" content="html5, html, javascript, canvas, bezierCurveTo, bezier, tool, path, draw, drawing, generator, creator, auto-generate, generate, canvas2d" />
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 
 <body>
-  <div id="container">
-    <h1>HTML5 <code>&lt;canvas&gt; bezierCurveTo</code> command generator</h1>
-    <blockquote>
-      <p>Using quadratic and cubic Bezier curves can be quite challenging, because unlike vector drawing software like Adobe Illustrator, <strong>we don't have direct visual feedback as to what we're doing</strong>. This makes it pretty hard to draw complex shapes. ... [I]f you have the time and, <strong>most of all, the patience</strong>, much more complex shapes can be created.<br/>
-      <div class="byline"> -- "Bezier and quadratic curves," <a href="https://developer.mozilla.org/en/Canvas_tutorial/Drawing_shapes#Bezier_and_quadratic_curves">MDN doc center</a></div>
-      </p>
-    </blockquote>
-    <p>Translation: Someone will write a tool for this later</p>
-    <p>And here is mine! This is a tool to generate calls to <code>toBezierTool</code> via a bezier path drawing GUI.</p>
-    <p>
-      <strong>Intended For:</strong> People who already know JavaScript/canvas and want to draw a simple non-standard shape, but don't want to fiddle with pixel values.<br/>
-      <strong>Not Intended For:</strong> Auto-generating code for those who don't know what they're doing; replacing a full-fledged awesome drawing program like Illustrator.
-    </p>
+  <div class="container">
+    <h1>HTML5 <code>&lt;canvas&gt;</code> SVG and <code>bezierCurveTo</code> command generator</h1>
+
     <div class="col">
       <fieldset>
         <legend>Path Edit Modes</legend>
-        <div id="modeSelector">
-          <label><input type="radio" name="mode" value="add" checked/>add points</label>
-          <label><input type="radio" name="mode" value="select" />move points</label>
-          <label><input type="radio" name="mode" value="remove" />remove points</label>
+        <div class="clear-button">
+          <button id="clear" class="btn btn-danger" type="button">Clear all points</button><br/>
         </div>
-        <label><input type="checkbox" name="lockControl" id="lockControl" />lock adjacent control points</label>
-        <button id="clear" type="button">Clear all points</button><br/>
+        <div id="modeSelector">
+          <label class="radio-inline"><input type="radio" name="mode" value="add" checked/>add points</label>
+          <label class="radio-inline"><input type="radio" name="mode" value="select" />move points</label>
+          <label class="radio-inline"><input type="radio" name="mode" value="remove" />remove points</label>
+        </div>
+        <div>
+          <label class="checkbox-inline"><input type="checkbox" name="lockControl" id="lockControl" />lock adjacent control points</label>
+        </div>
       </fieldset>
-      <canvas id="paintme" width="600" height="500"></canvas>
+      <canvas id="paintme" width="700" height="500"></canvas>
     </div>
     <div class="col">
       <fieldset>
         <legend>Output</legend>
         <div id="outputFormat">
-          <label><input type="radio" name="output" value="svg" checked/>SVG</label>
-          <label><input type="radio" name="output" value="js" />JS</label>
+          <label class="radio-inline"><input type="radio" name="output" value="svg" checked/>SVG</label>
+          <label class="radio-inline"><input type="radio" name="output" value="js" />JS</label>
         </div>
       </fieldset>    
-      <textarea id="putJS"></textarea>
-      <textarea id="putSVG"></textarea>
+      <textarea class="form-control" id="putJS"></textarea>
+      <textarea class="form-control" id="putSVG"></textarea>
     </div>
-    <fieldset>
+
+    <fieldset class="form-inline">
       <legend>Trace Path Over Image</legend>
-      Image URL: <input type="text" id="imageSrc"/> <button id="addImgSrc">Set Canvas Background</button>
+      <label for="imageSrc">Image URL:</label>
+      <input type="text" class="form-control" id="imageSrc" size="64"/> <button class="btn btn-default" id="addImgSrc">Set Canvas Background</button>
     </fieldset>
-    <p>Someday I might:</p>
+
+    <h2>About this tool</h2>
+
+    <p>This tool was written by Victoria Kirst and forked by Claudio Procida to generate SVG. Here's the original foreword by Victoria:</p>
+
+    <blockquote>
+      <p>Using quadratic and cubic Bezier curves can be quite challenging, because unlike vector drawing software like Adobe Illustrator, <strong>we don't have direct visual feedback as to what we're doing</strong>. This makes it pretty hard to draw complex shapes. ... [I]f you have the time and, <strong>most of all, the patience</strong>, much more complex shapes can be created.<br/>
+      <div class="byline"> &mdash; "Bezier and quadratic curves," <a href="https://developer.mozilla.org/en/Canvas_tutorial/Drawing_shapes#Bezier_and_quadratic_curves">MDN doc center</a></div>
+      </p>
+    </blockquote>
+    <p>Translation: Someone will write a tool for this later</p>
+    <p>This is a tool to generate SVG and calls to <code>toBezierTool</code> via a Bezier path drawing GUI.</p>
+    <p>
+      <strong>Intended For:</strong> People who already know JavaScript/canvas and want to draw a simple non-standard shape, but don't want to fiddle with pixel values.<br/>
+      <strong>Not Intended For:</strong> Auto-generating code for those who don't know what they're doing; replacing a full-fledged awesome drawing program like Illustrator.
+    </p>
+    <h3>Future improvements:</h3>
     <ul>
-      <li>Make an ACTUALLY useful app/library*</li>
+      <li>Make an ACTUALLY useful app/library<!-- * --></li>
       <li>Allow multiple paths</li>
       <li>Move paths</li>
       <li>Rotate paths</li>
@@ -63,9 +74,13 @@
       <li>Add point to segment</li>
       <li>Clean up code</li>
     </ul>
-    <p>If you'd like to do these things for me, <a href="script.js">have at</a>!</p>
-    <p>(*This app would be way more useful if I exposed features to make the vector art "living" instead of a static dead picture. So what I really should be doing is generating code for a JS object + provide a library that can transform it in interesting ways. I have the bulk of this code in my JS file, just need to expose it prettily!)</p>
+    <p>If you'd like to contribute these things for me, <a href="https://github.com/claudiopro/beziertool">fork the repo and submit a PR</a>!</p>
+    <!-- <p>(*This app would be way more useful if I exposed features to make the vector art "living" instead of a static dead picture. So what I really should be doing is generating code for a JS object + provide a library that can transform it in interesting ways. I have the bulk of this code in my JS file, just need to expose it prettily!)</p> -->
+
+    <p class="text-center">Copyright (c) 2011-2017 Victoria Kirst</p>
   </div>
   <script src="script.js"></script>
+
+  <a href="https://github.com/claudiopro/beziertool"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
 </body>
 </html>

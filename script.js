@@ -92,7 +92,7 @@ window.onload = function() {
 
   var clearButton = document.getElementById('clear');
   clearButton.addEventListener('click', function() {
-    var doDelete = confirm('r u sure u want to delete all');
+    var doDelete = confirm('Are you sure you want to delete all points?');
     if (doDelete) {
       gBezierPath = null;
       gBackCtx.clearRect(0, 0, WIDTH, HEIGHT);
