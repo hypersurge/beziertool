@@ -1,3 +1,5 @@
+(function(window, document, undefined) {
+
 // Bezier Tool Canvas Commands Generator
 //
 // history:
@@ -19,10 +21,10 @@ var gBackCtx;
 var gBezierPath;
 
 var Mode = {
-  kAdding : {value: 0, name: "Adding"}, 
-  kSelecting : {value: 1, name: "Selecting"}, 
-  kDragging: {value: 2, name: "Dragging"}, 
-  kRemoving : {value: 3, name: "Removing"}, 
+  kAdding :    {value: 0, name: 'Adding'},
+  kSelecting : {value: 1, name: 'Selecting'},
+  kDragging:   {value: 2, name: 'Dragging'},
+  kRemoving :  {value: 3, name: 'Removing'}
 };
 
 var gState;
@@ -49,27 +51,27 @@ window.onload = function() {
 
   gState = Mode.kAdding;
 
-  gCanvas.addEventListener("mousedown", handleDown, false);    
-  gCanvas.addEventListener("mouseup", handleUp, false);    
+  gCanvas.addEventListener('mousedown', handleDown, false);
+  gCanvas.addEventListener('mouseup', handleUp, false);
 
 
   var selectButton = document.getElementById('selectMode');
-  selectButton.addEventListener("click", function() {
+  selectButton.addEventListener('click', function() {
       gState = Mode.kSelecting;
     }, false);
 
   var addButton = document.getElementById('addMode');
-  addButton.addEventListener("click", function() {
+  addButton.addEventListener('click', function() {
       gState = Mode.kAdding;
     }, false);
 
   var removeButton = document.getElementById('removeMode');
-  removeButton.addEventListener("click", function() {
+  removeButton.addEventListener('click', function() {
       gState = Mode.kRemoving;
     }, false);
 
   var lockButton = document.getElementById('lockControl');
-  lockButton.addEventListener("click", function() {
+  lockButton.addEventListener('click', function() {
       ControlPoint.prototype.syncNeighbor = lockButton.checked;
     }, false);
 
@@ -109,8 +111,7 @@ function getMousePosition(e) {
     if (e.pageX != undefined && e.pageY != undefined) {
       x = e.pageX;
       y = e.pageY;
-    }
-    else {
+    } else {
       x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
       y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
     }
@@ -136,13 +137,14 @@ function handleDown(e) {
 }
 
 function handleDownAdd(pos) {
-  if (!gBezierPath)
+  if (!gBezierPath) {
     gBezierPath = new BezierPath(pos);
-  else {
+  } else {
     // If this was probably a selection, change to
     // select/drag mode
-    if (handleDownSelect(pos))
+    if (handleDownSelect(pos)) {
       return;
+    }
     gBezierPath.addPoint(pos);
   }
   render();
@@ -150,23 +152,26 @@ function handleDownAdd(pos) {
 
 // Return true/false if dragging mode
 function handleDownSelect(pos) {
-  if (!gBezierPath)
+  if (!gBezierPath) {
     return false;
+  }
   var selected = gBezierPath.selectPoint(pos);
   if (selected) {
     gState = Mode.kDragging;
-    gCanvas.addEventListener("mousemove", updateSelected, false);
+    gCanvas.addEventListener('mousemove', updateSelected, false);
     return true;
   }
   return false;
 }
 
 function handleDownRemove(pos) {
-  if (!gBezierPath)
+  if (!gBezierPath) {
     return;
+  }
   var deleted = gBezierPath.deletePoint(pos);
-  if (deleted)
+  if (deleted) {
     render();
+  }
 }
 
 function updateSelected(e) {
@@ -177,7 +182,7 @@ function updateSelected(e) {
 
 function handleUp(e) {
   if (gState == Mode.kDragging) {
-    gCanvas.removeEventListener("mousemove", updateSelected, false);
+    gCanvas.removeEventListener('mousemove', updateSelected, false);
     gBezierPath.clearSelected();
     gState = Mode.kSelecting;
   }
@@ -186,8 +191,9 @@ function handleUp(e) {
 function render() {
   gBackCtx.clearRect(0, 0, WIDTH, HEIGHT);
   gCtx.clearRect(0, 0, WIDTH, HEIGHT);
-  if (gBackgroundImg)
+  if (gBackgroundImg) {
     gBackCtx.drawImage(gBackgroundImg, 0, 0);
+  }
   if (gBezierPath) {
     gBezierPath.draw(gBackCtx);
     var codeBox = document.getElementById('putJS');
@@ -238,7 +244,7 @@ function Point(newX, newY)
   this.offsetFrom = function(pt) {
     return {
       xDelta : pt.x() - xVal,
-      yDelta : pt.y() - yVal,
+      yDelta : pt.y() - yVal
     };
   };
 
@@ -261,18 +267,21 @@ function ControlPoint(angle, magnitude, owner, isFirst) {
   this.setAngle = function(deg) {
     // don't update neighbor in risk of infinite loop!
     // TODO fixme fragile
-    if (_angle != deg)
+    if (_angle != deg) {
       _angle = deg;
+    }
   }
 
   this.origin = function origin() {
     var line = null;
-    if (_isFirst)
+    if (_isFirst) {
       line = _owner.prev;
-    else
+    } else {
       line = _owner;
-    if (line)
+    }
+    if (line) {
       return new Point(line.pt.x(), line.pt.y());
+    }
     return null;
   }
 
@@ -302,8 +311,9 @@ function ControlPoint(angle, magnitude, owner, isFirst) {
     var tryAngle = Math.atan(yDelta /xDelta);
     if (!isNaN(tryAngle)) {
       _angle = tryAngle;
-      if (xDelta < 0)
-        _angle += Math.PI
+      if (xDelta < 0) {
+        _angle += Math.PI;
+      }
     }
   }
 
@@ -312,18 +322,21 @@ function ControlPoint(angle, magnitude, owner, isFirst) {
     newLoc.translate(xDelta, yDelta);
     var dist = my.origin().offsetFrom(newLoc);
     computeMagnitudeAngleFromOffset(dist.xDelta, dist.yDelta);
-    if (my.__proto__.syncNeighbor)
+    if (my.__proto__.syncNeighbor) {
       updateNeighbor();
+    }
   };
 
   function updateNeighbor() {
     var neighbor = null;
-    if (_isFirst && _owner.prev)
+    if (_isFirst && _owner.prev) {
       neighbor = _owner.prev.ctrlPt2;
-    else if (!_isFirst && _owner.next)
+    } else if (!_isFirst && _owner.next) {
       neighbor = _owner.next.ctrlPt1;
-    if (neighbor)
+    }
+    if (neighbor) {
       neighbor.setAngle(_angle + Math.PI);
+    }
   }
 
   this.contains = function(pt) {
@@ -349,8 +362,9 @@ function ControlPoint(angle, magnitude, owner, isFirst) {
   }
 
   // When Constructed
-  if (my.__proto__.syncNeighbor)
+  if (my.__proto__.syncNeighbor) {
     updateNeighbor();
+  }
 }
 
 // Static variable dictacting if neighbors must be kept in sync.
@@ -379,58 +393,63 @@ function LineSegment(pt, prev) {
   this.draw = function(ctx) {
     my.pt.drawSquare(ctx);
     // Draw control points if we have them
-    if (my.ctrlPt1)
+    if (my.ctrlPt1) {
       my.ctrlPt1.draw(ctx);
-    if (my.ctrlPt2)
+    }
+    if (my.ctrlPt2) {
       my.ctrlPt2.draw(ctx);
+    }
 
     // If there are at least two points, draw curve.
-    if (my.prev)
+    if (my.prev) {
       drawCurve(ctx, my.prev.pt, my.pt, my.ctrlPt1, my.ctrlPt2);
+    }
   }
 
   this.toJSString = function() {
-    if (!my.prev)
+    if (!my.prev) {
       return '  ctx.moveTo(' + Math.round(my.pt.x()) + ' + xoff, ' + Math.round(my.pt.y()) + ' + yoff);';
-    else {
-      var ctrlPt1x = 0;
-      var ctrlPt1y = 0;
-      var ctrlPt2x = 0;
-      var ctlrPt2y = 0;
-      var x = 0;
-      var y = 0;
+    }
 
-      if (my.ctrlPt1) {
-        ctrlPt1x = Math.round(my.ctrlPt1.x());
-        ctrlPt1y = Math.round(my.ctrlPt1.y());
-      }
+    var ctrlPt1x = 0;
+    var ctrlPt1y = 0;
+    var ctrlPt2x = 0;
+    var ctlrPt2y = 0;
+    var x = 0;
+    var y = 0;
 
-      if (my.ctrlPt2) {
-        ctrlPt2x = Math.round(my.ctrlPt2.x());
-        ctrlPt2y = Math.round(my.ctrlPt2.y());
-      }
-      if (my.pt) {
-        x = Math.round(my.pt.x());
-        y = Math.round(my.pt.y());
-      }
+    if (my.ctrlPt1) {
+      ctrlPt1x = Math.round(my.ctrlPt1.x());
+      ctrlPt1y = Math.round(my.ctrlPt1.y());
+    }
 
-      return '  ctx.bezierCurveTo(' + ctrlPt1x + ' + xoff, ' +
-              ctrlPt1y + ' + yoff, ' +
-              ctrlPt2x + ' + xoff, ' +
-              ctrlPt2y + ' + yoff, ' +
-              x + ' + xoff, ' +
-              y + ' + yoff);';
-    }    
+    if (my.ctrlPt2) {
+      ctrlPt2x = Math.round(my.ctrlPt2.x());
+      ctrlPt2y = Math.round(my.ctrlPt2.y());
+    }
+    if (my.pt) {
+      x = Math.round(my.pt.x());
+      y = Math.round(my.pt.y());
+    }
+
+    return '  ctx.bezierCurveTo(' + ctrlPt1x + ' + xoff, ' +
+            ctrlPt1y + ' + yoff, ' +
+            ctrlPt2x + ' + xoff, ' +
+            ctrlPt2y + ' + yoff, ' +
+            x + ' + xoff, ' +
+            y + ' + yoff);';
   }
 
   this.findInLineSegment = function(pos) {
     if (my.pathPointIntersects(pos)) {
       my.selectedPoint = my.pt;
       return true;
-    } else if (my.ctrlPt1 && my.ctrlPt1.contains(pos)) {
+    }
+    if (my.ctrlPt1 && my.ctrlPt1.contains(pos)) {
       my.selectedPoint = my.ctrlPt1;
       return true;
-    } else if (my.ctrlPt2 && my.ctrlPt2.contains(pos)) {
+    }
+    if (my.ctrlPt2 && my.ctrlPt2.contains(pos)) {
       my.selectedPoint = my.ctrlPt2;
       return true;
     }
@@ -467,8 +486,9 @@ function LineSegment(pt, prev) {
       var slope = my.pt.computeSlope(my.prev.pt);
       var angle = Math.atan(slope);
     
-      if (my.prev.pt.x() > my.pt.x())
+      if (my.prev.pt.x() > my.pt.x()) {
         angle *= -1;
+      }
     
       my.ctrlPt1 = new ControlPoint(angle + Math.PI, 15, my, true);
       my.ctrlPt2 = new ControlPoint(angle, 15, my, false);
@@ -476,8 +496,7 @@ function LineSegment(pt, prev) {
   };
 }
 
-function BezierPath(startPoint)
-{
+function BezierPath(startPoint) {
   var my = this;
   // Beginning of BezierPath linked list.
   this.head = null;
@@ -504,8 +523,9 @@ function BezierPath(startPoint)
   init();
   
   this.draw = function(ctx) {
-    if (my.head == null)
+    if (my.head == null) {
       return;
+    }
 
     var current = my.head;
     while (current != null) {
@@ -540,25 +560,22 @@ function BezierPath(startPoint)
         if (leftNeighbor && rightNeighbor) {
           leftNeighbor.next = rightNeighbor;
           rightNeighbor.prev = leftNeighbor
-        }
-        // HEAD CASE
-        else if (!leftNeighbor) {
+        } else if (!leftNeighbor) { // HEAD CASE
           my.head = rightNeighbor;
           if (my.head) {
             rightNeighbor.ctrlPt1 = null;
             rightNeighbor.ctrlPt2 = null;
             my.head.prev = null;
-          }
-          else 
+          } else {
             my.tail = null;
-        }
-        // TAIL CASE
-        else if (!rightNeighbor) {
+          }
+        } else if (!rightNeighbor) { // TAIL CASE
           my.tail = leftNeighbor;
-          if (my.tail)
+          if (my.tail) {
             my.tail.next = null;
-          else 
+          } else {
             my.head = null;
+          }
         }
         return true;
       }
@@ -578,7 +595,7 @@ function BezierPath(startPoint)
   this.toJSString = function() {
     var myString = 
       ['function drawShape(ctx, xoff, yoff) {',
-       '  ctx.beginPath();',
+       '  ctx.beginPath();'
       ];
     
     var current = my.head;
@@ -595,3 +612,5 @@ function BezierPath(startPoint)
     my.addPoint(startPoint);
   };
 }
+
+}(window, document));
