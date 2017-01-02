@@ -54,49 +54,52 @@ window.onload = function() {
   gCanvas.addEventListener('mousedown', handleDown, false);
   gCanvas.addEventListener('mouseup', handleUp, false);
 
+  document.getElementById('modeSelector').addEventListener('click', function(e) {
+    if (e.target.tagName === 'INPUT' && e.target.type === 'radio') {
+      switch (e.target.value) {
+        case 'add':
+          gState = Mode.kAdding;
+          break;
+        case 'select':
+          gState = Mode.kSelecting;
+          break;
+        case 'remove':
+          gState = Mode.kRemoving;
+          break;
+      }
+    }
+  }, false);
 
-  var selectButton = document.getElementById('selectMode');
-  selectButton.addEventListener('click', function() {
-      gState = Mode.kSelecting;
-    }, false);
-
-  var addButton = document.getElementById('addMode');
-  addButton.addEventListener('click', function() {
-      gState = Mode.kAdding;
-    }, false);
-
-  var removeButton = document.getElementById('removeMode');
-  removeButton.addEventListener('click', function() {
-      gState = Mode.kRemoving;
-    }, false);
-
-  var jsButton = document.getElementById('outputJS');
-  jsButton.addEventListener('click', function() {
-      document.getElementById('putJS').style.display = 'block';
-      document.getElementById('putSVG').style.display = 'none';
-    }, false);
-
-  var svgButton = document.getElementById('outputSVG');
-  svgButton.addEventListener('click', function() {
-      document.getElementById('putJS').style.display = 'none';
-      document.getElementById('putSVG').style.display = 'block';
-    }, false);
+  document.getElementById('outputFormat').addEventListener('click', function(e) {
+    if (e.target.tagName === 'INPUT' && e.target.type === 'radio') {
+      switch (e.target.value) {
+        case 'js':
+          document.getElementById('putJS').style.display = 'block';
+          document.getElementById('putSVG').style.display = 'none';
+          break;
+        case 'svg':
+          document.getElementById('putJS').style.display = 'none';
+          document.getElementById('putSVG').style.display = 'block';
+          break;
+      }
+    }
+  }, false);
 
   var lockButton = document.getElementById('lockControl');
   lockButton.addEventListener('click', function() {
-      ControlPoint.prototype.syncNeighbor = lockButton.checked;
-    }, false);
+    ControlPoint.prototype.syncNeighbor = lockButton.checked;
+  }, false);
 
   var clearButton = document.getElementById('clear');
   clearButton.addEventListener('click', function() {
-      var doDelete = confirm('r u sure u want to delete all');
-      if (doDelete) {
-        gBezierPath = null;
-        gBackCtx.clearRect(0, 0, WIDTH, HEIGHT);
-        gCtx.clearRect(0, 0, WIDTH, HEIGHT);
-      }
- 
-    }, false);
+    var doDelete = confirm('r u sure u want to delete all');
+    if (doDelete) {
+      gBezierPath = null;
+      gBackCtx.clearRect(0, 0, WIDTH, HEIGHT);
+      gCtx.clearRect(0, 0, WIDTH, HEIGHT);
+    }
+
+  }, false);
 
   var setSrcButton = document.getElementById('addImgSrc');
   setSrcButton.addEventListener('click', function() {
@@ -112,7 +115,7 @@ window.onload = function() {
     
     input.value = '';
     
-    }, false);
+  }, false);
 };
 
 // Modified from http://diveintohtml5.org/examples/halma.js

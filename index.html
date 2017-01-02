@@ -27,9 +27,11 @@
     <div class="col">
       <fieldset>
         <legend>Path Edit Modes</legend>
-        <label><input type="radio" name="mode" id="addMode" checked/>add points</label>
-        <label><input type="radio" name="mode" id="selectMode" />move points</label>
-        <label><input type="radio" name="mode" id="removeMode" />remove points</label><br />
+        <div id="modeSelector">
+          <label><input type="radio" name="mode" value="add" checked/>add points</label>
+          <label><input type="radio" name="mode" value="select" />move points</label>
+          <label><input type="radio" name="mode" value="remove" />remove points</label>
+        </div>
         <label><input type="checkbox" name="lockControl" id="lockControl" />lock adjacent control points</label>
         <button id="clear" type="button">Clear all points</button><br/>
       </fieldset>
@@ -38,8 +40,10 @@
     <div class="col">
       <fieldset>
         <legend>Output</legend>
-        <label><input type="radio" name="output" id="outputSVG" checked/>SVG</label>
-        <label><input type="radio" name="output" id="outputJS" />JS</label>
+        <div id="outputFormat">
+          <label><input type="radio" name="output" value="svg" checked/>SVG</label>
+          <label><input type="radio" name="output" value="js" />JS</label>
+        </div>
       </fieldset>    
       <textarea id="putJS"></textarea>
       <textarea id="putSVG"></textarea>
