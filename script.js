@@ -479,8 +479,8 @@ function LineSegment(pt, prev, ctrlPt1, ctrlPt2) {
     my.prev = prev;
 
     if (ctrlPt1 != null && ctrlPt2 != null) {
-      my.ctrlPt1 = ctrlPt1;
-      my.ctrlPt2 = ctrlPt2;
+      my.ctrlPt1 = new ControlPoint(ctrlPt1.angle, ctrlPt1.len, my, true);
+      my.ctrlPt2 = new ControlPoint(ctrlPt2.angle, ctrlPt2.len, my, false);
     } else if (my.prev) {
 
       // Make initial line straight and with controls of length 15.
@@ -623,21 +623,25 @@ function drawPath(path) {
     if (tail && len > 2) {
       var angle1, angle2, len1, len2;
 
-      angle1 = Math.atan((tail.y() - pos[len-3])/(tail.x() - pos[len-4]));
-      angle2 = Math.atan((pt.y() - pos[len-5])/(pt.x() - pos[len-6]));
+      angle1 = Math.atan((pos[len-5] - tail.pt.y())/(tail.pt.x() - pos[len-6]));
+      angle2 = Math.atan((pos[len-3] - pt.y())/(pt.x() - pos[len-4])) + Math.PI;
+      if (tail.pt.x() > pt.x()) {
+        angle1 *= -1;
+        angle2 *= -1;
+      }
 
-      len1 = Math.sqrt(Math.pow(tail.y() - pos[len-3], 2) + Math.pow(tail.x() - pos[len-4], 2));
-      len2 = Math.sqrt(Math.pow(pt.y() - pos[len-5], 2) + Math.pow(pt.x() - pos[len-6], 2));
+      len1 = Math.sqrt(Math.pow(tail.pt.y() - pos[len-5], 2) + Math.pow(tail.pt.x() - pos[len-6], 2));
+      len2 = Math.sqrt(Math.pow(pt.y() - pos[len-3], 2) + Math.pow(pt.x() - pos[len-4], 2));
 
-      ctrl1 = new ControlPoint(angle1, len1, pt, true);
-      ctrl2 = new ControlPoint(angle2, len2, pt, false);
+      ctrl1 = {angle: angle1, len: len1};
+      ctrl2 = {angle: angle2, len: len2};
     }
     if (!gBezierPath) {
       gBezierPath = new BezierPath(pt);
     } else {
       gBezierPath.addPoint(pt, ctrl1, ctrl2);
     }
-    tail = pt;
+    tail = gBezierPath.tail;
   }
   render();
 }
