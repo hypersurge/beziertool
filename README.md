@@ -17,4 +17,5 @@ A tool that allows you to generate [SVG](https://www.w3.org/Graphics/SVG/) marku
 [MIT](https://opensource.org/licenses/MIT)
 
 Original work Copyright (c) 2011-2017 Victoria Kirst
+
 Modified work Copyright (c) 2017 Claudio Procida
