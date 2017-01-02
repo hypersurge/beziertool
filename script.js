@@ -366,7 +366,7 @@ function ControlPoint(angle, magnitude, owner, isFirst) {
 }
 
 // Static variable dictacting if neighbors must be kept in sync.
-ControlPoint.prototype.syncNeighbor = true;
+ControlPoint.prototype.syncNeighbor = document.getElementById('lockControl').checked;
 
 function LineSegment(pt, prev, ctrlPt1, ctrlPt2) {
   var my = this;
@@ -627,25 +627,14 @@ function drawPath(path) {
       var ctrlPt2x = pos[len-4];
       var ctrlPt2y = pos[len-3];
 
-      console.log('ctrlPt1:', ctrlPt1x, ctrlPt1y);
-      console.log('ctrlPt2:', ctrlPt2x, ctrlPt2y);
-
-      angle1 = - Math.atan((tail.pt.y() - ctrlPt1y)/(tail.pt.x() - ctrlPt1x));
-      angle2 = Math.atan((pt.y() - ctrlPt2y)/(pt.x() - ctrlPt2x));
-      if (tail.pt.y() > ctrlPt1y) {
-        angle1 *= -1;
+      angle1 = Math.atan((ctrlPt1y - tail.pt.y())/(ctrlPt1x - tail.pt.x()));
+      angle2 = Math.atan((ctrlPt2y - pt.y())/(ctrlPt2x - pt.x()));
+      if (tail.pt.x() > ctrlPt1x) {
+        angle1 += Math.PI;
       }
-      if (pt.y() > ctrlPt2y) {
-        angle2 *= -1;
+      if (pt.x() > ctrlPt2x) {
+        angle2 += Math.PI
       }
-      // if (tail.pt.y() > ctrlPt1x) {
-      //   angle1 += Math.PI;
-      // }
-      // if (pt.x() > ctrlPt2x) {
-        // angle2 += Math.PI
-      // }
-      console.log('angle1:', angle1, angle1 / Math.PI);
-      console.log('angle2:', angle2, angle2 / Math.PI);
 
       len1 = Math.sqrt(Math.pow(tail.pt.y() - ctrlPt1y, 2) + Math.pow(tail.pt.x() - ctrlPt1x, 2));
       len2 = Math.sqrt(Math.pow(pt.y() - ctrlPt2y, 2) + Math.pow(pt.x() - ctrlPt2x, 2));
