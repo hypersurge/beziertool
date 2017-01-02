@@ -108,7 +108,7 @@ window.onload = function() {
 function getMousePosition(e) {
     var x;
     var y;
-    if (e.pageX != undefined && e.pageY != undefined) {
+    if (e.pageX !== undefined && e.pageY !== undefined) {
       x = e.pageX;
       y = e.pageY;
     } else {
@@ -205,8 +205,7 @@ function render() {
 ///////////////////////////////////////////////////////////////////////////////
 // Classes
 ///////////////////////////////////////////////////////////////////////////////
-function Point(newX, newY)
-{
+function Point(newX, newY) {
   var my = this;
   var xVal = newX;
   var yVal = newY;
@@ -507,7 +506,7 @@ function BezierPath(startPoint) {
 
   this.addPoint = function(pt) {
     var newPt = new LineSegment(pt, my.tail);
-    if (my.tail == null) {
+    if (my.tail === null) {
       my.tail = newPt;
       my.head = newPt;
     } else {
@@ -523,12 +522,12 @@ function BezierPath(startPoint) {
   init();
   
   this.draw = function(ctx) {
-    if (my.head == null) {
+    if (my.head === null) {
       return;
     }
 
     var current = my.head;
-    while (current != null) {
+    while (current !== null) {
       current.draw(ctx);
       current = current.next;
     }
@@ -537,7 +536,7 @@ function BezierPath(startPoint) {
   // returns true if point selected
   this.selectPoint = function(pos) {
     var current = my.head;
-    while (current != null) {
+    while (current !== null) {
       if (current.findInLineSegment(pos)) {
         selectedSegment = current;
         return true;
@@ -550,7 +549,7 @@ function BezierPath(startPoint) {
   // returns true if point deleted
   this.deletePoint = function(pos) {
     var current = my.head;
-    while (current != null) {
+    while (current !== null) {
       if (current.pathPointIntersects(pos)) {
         var toDelete = current;
         var leftNeighbor = current.prev;
@@ -599,7 +598,7 @@ function BezierPath(startPoint) {
       ];
     
     var current = my.head;
-    while (current != null) {
+    while (current !== null) {
       myString.push(current.toJSString());
       current = current.next;
     }
