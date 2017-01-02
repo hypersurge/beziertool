@@ -34,3 +34,7 @@ textarea {
   height: 500px;
   width: 300px;
 }
+
+#putJS {
+  display: none;
+}

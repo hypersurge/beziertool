@@ -70,6 +70,18 @@ window.onload = function() {
       gState = Mode.kRemoving;
     }, false);
 
+  var jsButton = document.getElementById('outputJS');
+  jsButton.addEventListener('click', function() {
+      document.getElementById('putJS').style.display = 'block';
+      document.getElementById('putSVG').style.display = 'none';
+    }, false);
+
+  var svgButton = document.getElementById('outputSVG');
+  svgButton.addEventListener('click', function() {
+      document.getElementById('putJS').style.display = 'none';
+      document.getElementById('putSVG').style.display = 'block';
+    }, false);
+
   var lockButton = document.getElementById('lockControl');
   lockButton.addEventListener('click', function() {
       ControlPoint.prototype.syncNeighbor = lockButton.checked;
@@ -197,6 +209,8 @@ function render() {
     gBezierPath.draw(gBackCtx);
     var codeBox = document.getElementById('putJS');
     codeBox.innerHTML = gBezierPath.toJSString();  
+    var svgBox = document.getElementById('putSVG');
+    svgBox.innerHTML = gBezierPath.toSVGString();  
   }
   gCtx.drawImage(gBackCanvas, 0, 0);
 }
@@ -438,6 +452,40 @@ function LineSegment(pt, prev, ctrlPt1, ctrlPt2) {
             y + ' + yoff);';
   }
 
+  this.toSVGString = function() {
+    if (!my.prev) {
+      return 'M ' + Math.round(my.pt.x()) + ' ' + Math.round(my.pt.y()) + ' ';
+    }
+
+    var ctrlPt1x = 0;
+    var ctrlPt1y = 0;
+    var ctrlPt2x = 0;
+    var ctlrPt2y = 0;
+    var x = 0;
+    var y = 0;
+
+    if (my.ctrlPt1) {
+      ctrlPt1x = Math.round(my.ctrlPt1.x());
+      ctrlPt1y = Math.round(my.ctrlPt1.y());
+    }
+
+    if (my.ctrlPt2) {
+      ctrlPt2x = Math.round(my.ctrlPt2.x());
+      ctrlPt2y = Math.round(my.ctrlPt2.y());
+    }
+    if (my.pt) {
+      x = Math.round(my.pt.x());
+      y = Math.round(my.pt.y());
+    }
+
+    return 'C ' + ctrlPt1x + ' ' +
+            ctrlPt1y + ' ' +
+            ctrlPt2x + ' ' +
+            ctrlPt2y + ' ' +
+            x + ' ' +
+            y + ' ';
+  }
+
   this.findInLineSegment = function(pos) {
     if (my.pathPointIntersects(pos)) {
       my.selectedPoint = my.pt;
@@ -607,6 +655,26 @@ function BezierPath(startPoint) {
     myString.push('  ctx.stroke();');
     myString.push('}');
     return myString.join('\n');
+  }
+
+  this.toSVGString = function() {
+    var myString = 
+      ['<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">',
+       '\n',
+       '<svg xmlns="http://www.w3.org/2000/svg" version="1.1">',
+       '\n',
+       '<path d="'
+      ];
+    
+    var current = my.head;
+    while (current != null) {
+      myString.push(current.toSVGString());
+      current = current.next;
+    }
+    myString.push('Z"></path>');
+    myString.push('\n');
+    myString.push('</svg>');
+    return myString.join('');
   }
 
   function init() {

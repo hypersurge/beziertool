@@ -24,19 +24,25 @@
       <strong>Intended For:</strong> People who already know JavaScript/canvas and want to draw a simple non-standard shape, but don't want to fiddle with pixel values.<br/>
       <strong>Not Intended For:</strong> Auto-generating code for those who don't know what they're doing; replacing a full-fledged awesome drawing program like Illustrator.
     </p>
-    <fieldset>
-      <legend>Path Edit Modes</legend>
-      <label><input type="radio" name="mode" id="addMode" checked/>add points</label>
-      <label><input type="radio" name="mode" id="selectMode" />move points</label>
-      <label><input type="radio" name="mode" id="removeMode" />remove points</label><br />
-      <label><input type="checkbox" name="lockControl" id="lockControl" />lock adjacent control points</label>
-      <button id="clear" type="button">Clear all points</button><br/>
-    </fieldset>
     <div class="col">
+      <fieldset>
+        <legend>Path Edit Modes</legend>
+        <label><input type="radio" name="mode" id="addMode" checked/>add points</label>
+        <label><input type="radio" name="mode" id="selectMode" />move points</label>
+        <label><input type="radio" name="mode" id="removeMode" />remove points</label><br />
+        <label><input type="checkbox" name="lockControl" id="lockControl" />lock adjacent control points</label>
+        <button id="clear" type="button">Clear all points</button><br/>
+      </fieldset>
       <canvas id="paintme" width="600" height="500"></canvas>
     </div>
     <div class="col">
+      <fieldset>
+        <legend>Output</legend>
+        <label><input type="radio" name="output" id="outputSVG" checked/>SVG</label>
+        <label><input type="radio" name="output" id="outputJS" />JS</label>
+      </fieldset>    
       <textarea id="putJS"></textarea>
+      <textarea id="putSVG"></textarea>
     </div>
     <fieldset>
       <legend>Trace Path Over Image</legend>
