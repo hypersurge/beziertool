@@ -101,14 +101,13 @@ window.onload = function() {
     input.value = '';
     
     }, false);
-
 };
 
 // Modified from http://diveintohtml5.org/examples/halma.js
 function getMousePosition(e) {
     var x;
     var y;
-    if (e.pageX !== undefined && e.pageY !== undefined) {
+    if (e.pageX != undefined && e.pageY != undefined) {
       x = e.pageX;
       y = e.pageY;
     } else {
@@ -369,7 +368,7 @@ function ControlPoint(angle, magnitude, owner, isFirst) {
 // Static variable dictacting if neighbors must be kept in sync.
 ControlPoint.prototype.syncNeighbor = true;
 
-function LineSegment(pt, prev) {
+function LineSegment(pt, prev, ctrlPt1, ctrlPt2) {
   var my = this;
 
   // Path point.
@@ -479,7 +478,10 @@ function LineSegment(pt, prev) {
     my.pt = pt;
     my.prev = prev;
 
-    if (my.prev) {
+    if (ctrlPt1 != null && ctrlPt2 != null) {
+      my.ctrlPt1 = ctrlPt1;
+      my.ctrlPt2 = ctrlPt2;
+    } else if (my.prev) {
 
       // Make initial line straight and with controls of length 15.
       var slope = my.pt.computeSlope(my.prev.pt);
@@ -504,8 +506,8 @@ function BezierPath(startPoint) {
   // Reference to selected LineSegment
   var selectedSegment;
 
-  this.addPoint = function(pt) {
-    var newPt = new LineSegment(pt, my.tail);
+  this.addPoint = function(pt, ctrlPt1, ctrlPt2) {
+    var newPt = new LineSegment(pt, my.tail, ctrlPt1, ctrlPt2);
     if (my.tail === null) {
       my.tail = newPt;
       my.head = newPt;
@@ -527,7 +529,7 @@ function BezierPath(startPoint) {
     }
 
     var current = my.head;
-    while (current !== null) {
+    while (current != null) {
       current.draw(ctx);
       current = current.next;
     }
@@ -536,7 +538,7 @@ function BezierPath(startPoint) {
   // returns true if point selected
   this.selectPoint = function(pos) {
     var current = my.head;
-    while (current !== null) {
+    while (current != null) {
       if (current.findInLineSegment(pos)) {
         selectedSegment = current;
         return true;
@@ -549,7 +551,7 @@ function BezierPath(startPoint) {
   // returns true if point deleted
   this.deletePoint = function(pos) {
     var current = my.head;
-    while (current !== null) {
+    while (current != null) {
       if (current.pathPointIntersects(pos)) {
         var toDelete = current;
         var leftNeighbor = current.prev;
@@ -598,7 +600,7 @@ function BezierPath(startPoint) {
       ];
     
     var current = my.head;
-    while (current !== null) {
+    while (current != null) {
       myString.push(current.toJSString());
       current = current.next;
     }
@@ -611,5 +613,36 @@ function BezierPath(startPoint) {
     my.addPoint(startPoint);
   };
 }
+
+function drawPath(path) {
+  gBezierPath = null;
+  var pos, pt, ctrl1, ctrl2, len, tail;
+  while (pos = path.shift()) {
+    len = pos.length;
+    pt = new Point(pos[len-2], pos[len-1]);
+    if (tail && len > 2) {
+      var angle1, angle2, len1, len2;
+
+      angle1 = Math.atan((tail.y() - pos[len-3])/(tail.x() - pos[len-4]));
+      angle2 = Math.atan((pt.y() - pos[len-5])/(pt.x() - pos[len-6]));
+
+      len1 = Math.sqrt(Math.pow(tail.y() - pos[len-3], 2) + Math.pow(tail.x() - pos[len-4], 2));
+      len2 = Math.sqrt(Math.pow(pt.y() - pos[len-5], 2) + Math.pow(pt.x() - pos[len-6], 2));
+
+      ctrl1 = new ControlPoint(angle1, len1, pt, true);
+      ctrl2 = new ControlPoint(angle2, len2, pt, false);
+    }
+    if (!gBezierPath) {
+      gBezierPath = new BezierPath(pt);
+    } else {
+      gBezierPath.addPoint(pt, ctrl1, ctrl2);
+    }
+    tail = pt;
+  }
+  render();
+}
+
+// Public API
+window.drawPath = drawPath;
 
 }(window, document));
