@@ -152,9 +152,12 @@ function handleDown(e) {
 function handleDownAdd(pos) {
   if (!gBezierPath) {
     gBezierPath = new BezierPath(pos);
-    gBezierPath.addPoint(new Point(pos.x + 50, pos.y));
-    gBezierPath.addPoint(new Point(pos.x + 50, pos.y + 50));
-    gBezierPath.addPoint(new Point(pos.x, pos.y + 50));
+    alert( pos.x );
+    alert( pos );
+    alert( new Point( pos.x, pos.y ) );
+//     gBezierPath.addPoint(new Point(pos.x + 50, pos.y));
+//     gBezierPath.addPoint(new Point(pos.x + 50, pos.y + 50));
+//     gBezierPath.addPoint(new Point(pos.x, pos.y + 50));
   } else {
     // If this was probably a selection, change to
     // select/drag mode
