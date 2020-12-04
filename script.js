@@ -518,9 +518,9 @@ function LineSegment(pt, prev, ctrlPt1, ctrlPt2) {
 
   function drawCurve(ctx, startPt, endPt, ctrlPt1, ctrlPt2) {
     ctx.save();
-    ctx.fillStyle = 'black';
-    ctx.strokeStyle = 'yellow';  
-    ctx.lineWidth = '2';  
+    // ctx.fillStyle = 'black';
+    ctx.strokeStyle = 'orange';  
+    ctx.lineWidth = '4';  
     ctx.beginPath();
     ctx.moveTo(startPt.x(), startPt.y());
     ctx.bezierCurveTo(ctrlPt1.x(), ctrlPt1.y(), ctrlPt2.x(), ctrlPt2.y(), endPt.x(), endPt.y());
