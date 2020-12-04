@@ -151,10 +151,15 @@ function handleDown(e) {
 
 function handleDownAdd(pos) {
   if (!gBezierPath) {
+//     pos = new Point( 100, 100 );
     gBezierPath = new BezierPath(pos);
-    gBezierPath.addPoint(new Point(pos.x() + 50, pos.y()));
-    gBezierPath.addPoint(new Point(pos.x() + 50, pos.y() + 50));
-    gBezierPath.addPoint(new Point(pos.x(), pos.y() + 50));
+//     var x = pos.x();
+//     var y = pos.y();
+//     var size = 200;
+//     gBezierPath.addPoint(new Point(x + size, y));
+//     gBezierPath.addPoint(new Point(x + size, y + size));
+//     gBezierPath.addPoint(new Point(x, y + size));
+//     gBezierPath.addPoint(new Point(x, y));
   } else {
     // If this was probably a selection, change to
     // select/drag mode
@@ -674,15 +679,16 @@ function BezierPath(startPoint) {
        '\n',
        '<path d="'
       ];
-    
+    myString = [];
     var current = my.head;
     while (current != null) {
       myString.push(current.toSVGString());
       current = current.next;
     }
-    myString.push('Z"></path>');
-    myString.push('\n');
-    myString.push('</svg>');
+    myString.push('Z');
+//     myString.push('Z"></path>');
+//     myString.push('\n');
+//     myString.push('</svg>');
     return myString.join('');
   }
 
