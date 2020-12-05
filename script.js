@@ -374,8 +374,9 @@ function ControlPoint(angle, magnitude, owner, isFirst) {
 
   this.draw = function(ctx) {
     ctx.save();
-    ctx.fillStyle = 'gray';
-    ctx.strokeStyle = 'gray';  
+    ctx.fillStyle = 'pink';
+    ctx.strokeStyle = 'lime';
+    ctx.lineWidth = 4;
     ctx.beginPath();
     var startPt = my.origin();
     var endPt = my.asPoint();
@@ -528,7 +529,7 @@ function LineSegment(pt, prev, ctrlPt1, ctrlPt2) {
     ctx.save();
     // ctx.fillStyle = 'black';
     ctx.strokeStyle = 'orange';  
-    ctx.lineWidth = '4';  
+    ctx.lineWidth = '8';  
     ctx.beginPath();
     ctx.moveTo(startPt.x(), startPt.y());
     ctx.bezierCurveTo(ctrlPt1.x(), ctrlPt1.y(), ctrlPt2.x(), ctrlPt2.y(), endPt.x(), endPt.y());
