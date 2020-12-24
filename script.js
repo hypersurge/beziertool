@@ -115,7 +115,33 @@ window.onload = function() {
     };
     gBackgroundImg.src = input.value;
   }, false);
+  
+	var l_data = getParameterByName( 'data' );
+	if ( l_data != null )
+	{
+		console.log( l_data );
+		var l_pathData = [];
+		var l_paths = l_data.split( " C " );
+		var l_moveTo = l_paths.shift().split( " " );
+		l_pathData.push( [parseInt(l_moveTo[1]), parseInt(l_moveTo[2])] );
+		l_paths.forEach( function( p_path )
+		{
+			var l_parts = p_path.split( " " );
+			l_pathData.push( [parseInt(l_parts[0]), parseInt(l_parts[1]), parseInt(l_parts[2]), parseInt(l_parts[3]), parseInt(l_parts[4]), parseInt(l_parts[5])] );
+		} );
+		drawPath( l_pathData );
+	}
 };
+
+function getParameterByName(name, url = window.location.href) {
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
 
 // Modified from http://diveintohtml5.org/examples/halma.js
 function getMousePosition(e) {
